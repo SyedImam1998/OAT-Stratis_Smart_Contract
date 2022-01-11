@@ -18,11 +18,11 @@ public class MyContract : SmartContract
 
     }
 
-    public string setOwner(string name,string password,string address,UInt32 rating, string pnumber, Address wAddress){
+    public string setOwner(string name,string password,string address,UInt32 rating, string pnumber, Address wAddress,string flag){
 
         Owner o1 = new Owner();
         o1 = getOwner(wAddress);
-        if (o1.name == null)
+        if (o1.name == null|| flag=="2")
         {
             Owner own = new Owner();
             own.Addr = wAddress;
@@ -83,11 +83,11 @@ public class MyContract : SmartContract
     }
 
 
-    public string setTenant(string name,UInt32 rating, string phoneNo,Address add)
+    public string setTenant(string name,UInt32 rating, string phoneNo,Address add,string flag)
     {
         tenant t1 = new tenant();
         t1 = getTenants(add);
-        if (t1.name == null)
+        if (t1.name == null|| flag=="2")
         {
             tenant ten = new tenant();
             ten.add = add;
@@ -147,7 +147,7 @@ public class MyContract : SmartContract
     : base(smartContractState)
     {
 
-        setTenant("syedImam",5,"9908909245", Message.Sender);
+        
 
     }
     /// <summary>
@@ -208,6 +208,124 @@ public class MyContract : SmartContract
         return ownerList;
         // return TotalIndex;
     }
+
+   /* public uint getRatingIndexOfOwner(Address Oadd)
+    {
+        return PersistentState.GetUInt32($"{Oadd}");
+    }
+    public void setRatingIndexOfOwner(Address Oadd, uint index)
+    {
+        index = index + 1;
+        PersistentState.SetUInt32($"{Oadd}", index);
+    }*/
+
+    public uint getRatingForOwner(Address Oadd, Address Tadd)
+    {
+        return PersistentState.GetUInt32($"{Oadd}:{Tadd}");
+    }
+
+    public string setRatingForOwner(Address Oadd,Address Tadd,uint rating)
+    {
+        Address[] tenantslist=getTenantsDetails(Oadd);
+        bool flag = false;
+        Owner o1 = new Owner();
+        o1 = getOwner(Oadd);
+        for (uint i = 0; i < tenantslist.Length; i++)
+        {
+            if (tenantslist[i] == Tadd)
+            {
+                
+                PersistentState.SetUInt32($"{Oadd}:{Tadd}",rating);
+                flag = true;
+                uint ratingAddOwner=getTotalRatingOfOwner(Oadd);
+                setOwner(o1.name, o1.password, o1.address, ratingAddOwner, o1.pnumber, o1.Addr,"2");
+                return "rating Data saved";
+            }
+            
+        }
+        if (flag == false)
+        {
+            return "rating not saved";
+        }
+        return "rating saved";
+    }
+
+    public uint getTotalRatingOfOwner(Address Oadd)
+    {
+        Address[] tenantlist = getTenantsDetails(Oadd);
+        uint rating = 0;
+        uint totalRaters = 0;
+        uint totalRating = 0;
+        for(uint i = 0; i < tenantlist.Length; i++)
+        {
+           rating=rating+ getRatingForOwner(Oadd, tenantlist[i]);
+            if (getRatingForOwner(Oadd, tenantlist[i]) > 0)
+            {
+                totalRaters = totalRaters + 1;
+            }
+        }
+        totalRating = rating / totalRaters;
+
+        return totalRating;
+
+    }
+    /// <summary>
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// </summary>
+    /// <param name="Tadd"></param>
+    /// <param name="Oadd"></param>
+    /// <returns></returns>
+    public uint getRatingForTenant(Address Tadd, Address Oadd )
+    {
+        return PersistentState.GetUInt32($"T{Tadd}:{Oadd}");
+    }
+
+    public string setRatingForTenant(Address Oadd, Address Tadd, uint rating)
+    {
+        Address[] ownerlist = getOwnerDetails(Tadd);
+        bool flag = false;
+        tenant t1 = new tenant();
+        t1 = getTenants(Tadd);
+        for (uint i = 0; i < ownerlist.Length; i++)
+        {
+            if (ownerlist[i] == Oadd)
+            {
+
+                PersistentState.SetUInt32($"T{Tadd}:{Oadd}", rating);
+                flag = true;
+                uint ratingAddTenant = getTotalRatingOfTenant(Tadd);
+                setTenant(t1.name,ratingAddTenant,t1.pnumber,t1.add, "2");
+                return "rating Data saved";
+            }
+
+        }
+        if (flag == false)
+        {
+            return "rating not saved";
+        }
+        return "rating saved";
+    }
+
+    public uint getTotalRatingOfTenant(Address Tadd)
+    {
+        Address[] ownerlist = getOwnerDetails(Tadd);
+        uint rating = 0;
+        uint totalRaters = 0;
+        uint totalRating = 0;
+        for (uint i = 0; i < ownerlist.Length; i++)
+        {
+            rating = rating + getRatingForTenant(Tadd,ownerlist[i]);
+            if (getRatingForTenant(Tadd,ownerlist[i]) > 0)
+            {
+                totalRaters = totalRaters + 1;
+            }
+        }
+        totalRating = rating / totalRaters;
+
+        return totalRating;
+
+    }
+
 
 
 }
