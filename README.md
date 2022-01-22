@@ -2,11 +2,11 @@
 
 Hi Welcome to OAT Smart Contract!!!!!!!!!!!!!!!!!
 Let me be your guide for today. Let us enter the world of OAT.
-Clone this Repository 
-Clone this repository or download this repository code.
-Now open this project in Visual Studio 2019. You can go through the code, i have also provided comments which can help you to clearly understand this smart contract.
-Now open the Stratis.FullNode.sln in Visual studio 2019 and go to solution explore right click on  Stratis.CirrusMinerD and click open developer terminal.
-Run “dotnet run -devmode=miner” this command.
+ 
+1. Clone this repository or download this repository code.
+2. Now open this project in Visual Studio 2019. You can go through the code, i have also provided comments which can help you to clearly understand this smart contract.
+3. Now open the Stratis.FullNode.sln in Visual studio 2019 and go to solution explore right click on  Stratis.CirrusMinerD and click open developer terminal.
+4. Run “dotnet run -devmode=miner” this command.
 This will  run the blockchain on a local machine for development.
 Now we need to generate the by bytecode of the smart contract. Let us generate that now.
 Now open Stratis.SmartContracts.Tools.Sct.sln in visual studio 2019.
