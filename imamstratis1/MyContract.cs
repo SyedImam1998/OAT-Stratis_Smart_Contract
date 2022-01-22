@@ -17,7 +17,7 @@ public class MyContract : SmartContract
         
 
     }
-    public string setOwnerForFrontend(string name, string password, string address, UInt32 rating, string pnumber, Address wAddress)/// to set the owner from website...
+    public string setOwnerForFrontend(string name, string password, string address, UInt32 rating, string pnumber, Address wAddress)/// /to set the owner from website...
     {
         return setOwner(name, password, address, rating, pnumber, wAddress, "1");
     }
