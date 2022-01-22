@@ -17,8 +17,11 @@ public class MyContract : SmartContract
         
 
     }
-
-    public string setOwner(string name,string password,string address,UInt32 rating, string pnumber, Address wAddress,string flag){/// this method is used to set the owner details
+    public string setOwnerForFrontend(string name, string password, string address, UInt32 rating, string pnumber, Address wAddress)/// to set the owner from website...
+    {
+        return setOwner(name, password, address, rating, pnumber, wAddress, "1");
+    }
+    private string setOwner(string name,string password,string address,UInt32 rating, string pnumber, Address wAddress,string flag){/// this method is used to set the owner details
 
         Owner o1 = new Owner();
         o1 = getOwner(wAddress);
@@ -56,25 +59,25 @@ public class MyContract : SmartContract
         o2.rating = o1.rating;
         return o2;
     }
-    public uint getIndexOfTenantsForThisOwner(Address add)// this method returns number of tenants rented a particular owner house
+    private uint getIndexOfTenantsForThisOwner(Address add)// this method returns number of tenants rented a particular owner house
     {
         return PersistentState.GetUInt32($"{add}");
     }
-    public void setIndexOfTenantsInThisOwner(Address add, uint index)// used to set index of tenants rented a particular owner house
+    private void setIndexOfTenantsInThisOwner(Address add, uint index)// used to set index of tenants rented a particular owner house
     {
         index = index + 1;
         PersistentState.SetUInt32($"{add}",index);
     }
 
 
-    public void setTenantsListForOwner(Address ownerAdd,Address tenantAdd)// this method is used to store tenant address with owner address and with index.
+    private void setTenantsListForOwner(Address ownerAdd,Address tenantAdd)// this method is used to store tenant address with owner address and with index.
     {
         uint index = getIndexOfTenantsForThisOwner(ownerAdd);
         setIndexOfTenantsInThisOwner(ownerAdd, index);
         PersistentState.SetAddress($"{ownerAdd}:{index+1}", tenantAdd);
     }
 
-    public Address getTenantsListForOwner(Address ownerAdd,uint index)// this method will give out tenants address with the keys ie owner address and index.
+    private Address getTenantsListForOwner(Address ownerAdd,uint index)// this method will give out tenants address with the keys ie owner address and index.
     {
         return PersistentState.GetAddress($"{ownerAdd}:{index}");
     }
@@ -92,8 +95,13 @@ public class MyContract : SmartContract
       
     }
 
+    public string setTenantFromFront_end(string name, UInt32 rating, string phoneNo, Address add, string password)// to set the tenant from website
 
-    public string setTenant(string name,UInt32 rating, string phoneNo,Address add,string flag,string password)/// used to set tenant details.
+    {
+        return setTenant(name, rating, phoneNo, add, "1", password);
+
+    }
+    private string setTenant(string name,UInt32 rating, string phoneNo,Address add,string flag,string password)/// used to set tenant details.
     {
         tenant t1 = new tenant();
         t1 = getTenants(add);
@@ -129,25 +137,25 @@ public class MyContract : SmartContract
         t2.rating = t1.rating;
         return t2;
     }
-    public uint getIndexOfOwnersForThisTenant(Address add)// this method will provide number of owners have rented their house to this tenant.
+    private uint getIndexOfOwnersForThisTenant(Address add)// this method will provide number of owners have rented their house to this tenant.
     {
         return PersistentState.GetUInt32($"{add}");
     }
-    public void setIndexOfOwnersInThisTenant(Address add, uint index)/// this method will set index of onwers for a particluar tenant.
+    private void setIndexOfOwnersInThisTenant(Address add, uint index)/// this method will set index of onwers for a particluar tenant.
     {
         index = index + 1;
         PersistentState.SetUInt32($"{add}", index);
     }
 
 
-    public void setOwnersListForTenant(Address ownerAdd, Address tenantAdd)// this method will save owner address for a particular tenant with index.
+    private void setOwnersListForTenant(Address ownerAdd, Address tenantAdd)// this method will save owner address for a particular tenant with index.
     {
         uint index = getIndexOfOwnersForThisTenant(tenantAdd);
         setIndexOfOwnersInThisTenant(tenantAdd, index);
         PersistentState.SetAddress($"{tenantAdd}:{index + 1}", ownerAdd);
     }
 
-    public Address getOwnersListForTenant(Address tenantAdd, uint index)//this method will return owner address with keys ie tenant address and index.
+    private Address getOwnersListForTenant(Address tenantAdd, uint index)//this method will return owner address with keys ie tenant address and index.
     {
         return PersistentState.GetAddress($"{tenantAdd}:{index}");
     }
@@ -216,7 +224,7 @@ public class MyContract : SmartContract
 
   
 
-    public uint getRatingForOwner(Address Oadd, Address Tadd)// this method is used for getting the rating of tenant that he gave to a owner
+    private uint getRatingForOwner(Address Oadd, Address Tadd)// this method is used for getting the rating of tenant that he gave to a owner
     {
         return PersistentState.GetUInt32($"{Oadd}:{Tadd}");
     }
@@ -258,7 +266,7 @@ public class MyContract : SmartContract
         return "rating saved";
     }
 
-    public uint getTotalRatingOfOwner(Address Oadd)// this method will calculate all the previous ratings of the a particular owner and return the value
+    private uint getTotalRatingOfOwner(Address Oadd)// this method will calculate all the previous ratings of the a particular owner and return the value
     {
         Address[] tenantlist = getTenantsDetails(Oadd);
         uint rating = 0;
@@ -278,7 +286,7 @@ public class MyContract : SmartContract
 
     }
     
-    public uint getRatingForTenant(Address Tadd, Address Oadd)// this method is used for getting the rating of owner that he gave to a tenant
+    private uint getRatingForTenant(Address Tadd, Address Oadd)// this method is used for getting the rating of owner that he gave to a tenant
     {
         return PersistentState.GetUInt32($"T{Tadd}:{Oadd}");
     }
@@ -320,7 +328,7 @@ public class MyContract : SmartContract
         return "rating saved";
     }
 
-    public uint getTotalRatingOfTenant(Address Tadd)// this method will calculate all the previous ratings of the a particular tenant and return the value
+    private uint getTotalRatingOfTenant(Address Tadd)// this method will calculate all the previous ratings of the a particular tenant and return the value
     {
         Address[] ownerlist = getOwnerDetails(Tadd);
         uint rating = 0;
