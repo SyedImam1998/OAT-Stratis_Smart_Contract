@@ -17,9 +17,9 @@ public class MyContract : SmartContract
         
 
     }
-    public string setOwnerForFrontend(string name, string password, string address, UInt32 rating, string pnumber, Address wAddress)/// /to set the owner from website...
+    public string setOwnerForFrontend(string name, string password, string address, string pnumber, Address wAddress)/// /to set the owner from website...
     {
-        return setOwner(name, password, address, rating, pnumber, wAddress, "1");
+        return setOwner(name, password, address, 0, pnumber, wAddress, "1");
     }
     private string setOwner(string name,string password,string address,UInt32 rating, string pnumber, Address wAddress,string flag){/// this method is used to set the owner details
 
@@ -95,10 +95,10 @@ public class MyContract : SmartContract
       
     }
 
-    public string setTenantFromFront_end(string name, UInt32 rating, string phoneNo, Address add, string password)// to set the tenant from website
+    public string setTenantFromFront_end(string name, string phoneNo, Address add, string password)// to set the tenant from website
 
     {
-        return setTenant(name, rating, phoneNo, add, "1", password);
+        return setTenant(name, 0, phoneNo, add, "1", password);
 
     }
     private string setTenant(string name,UInt32 rating, string phoneNo,Address add,string flag,string password)/// used to set tenant details.
